@@ -57,6 +57,7 @@ export class PostService {
         if (sort) {
             filteredPosts = sortBy(filteredPosts, sort);
         }
+        const total = filteredPosts.length;
         filteredPosts = filteredPosts.slice(
             (page - 1) * itemsPerPage,
             page * itemsPerPage,
@@ -64,7 +65,7 @@ export class PostService {
 
         return {
             results: filteredPosts,
-            total: filteredPosts.length,
+            total,
             page: page,
         };
     }
