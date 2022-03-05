@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PostRepository } from './post.repository';
-import { trim } from 'lodash';
+import { trim, sortBy } from 'lodash';
 
 @Injectable()
 export class PostService {
@@ -15,14 +15,17 @@ export class PostService {
         };
     }
 
-    async searchPosts(query: string) {
+    async searchPosts(
+        query: string,
+        options: { sort?: 'name' | 'dateLastEdited' } = {},
+    ) {
         const posts = await this.getPosts();
 
         const isDoubleQuotes = query.startsWith('"') && query.endsWith('"');
         query = trim(query, '"');
         const queryRegex = new RegExp(query, isDoubleQuotes ? '' : 'i');
 
-        const filteredPosts = posts.data.filter((post) => {
+        let filteredPosts = posts.data.filter((post) => {
             if (post.name && post.name.match(queryRegex)) {
                 return true;
             }
@@ -31,6 +34,10 @@ export class PostService {
             }
             return false;
         });
+
+        if (options.sort) {
+            filteredPosts = sortBy(filteredPosts, options.sort);
+        }
 
         return {
             data: filteredPosts,

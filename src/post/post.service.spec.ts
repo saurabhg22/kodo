@@ -49,11 +49,26 @@ describe('PostService', () => {
         it('searchPosts should only return items with exact match when query has double quotes', async () => {
             const { data } = await service.searchPosts('"the King"');
 
-            console.log(data);
             for (const post of data) {
                 expect(
                     (post.name + post.description).includes('the King'),
-                ).toBe(true);
+                ).toBeTruthy();
+            }
+        });
+
+        it('searchPosts should sort with name', async () => {
+            const { data } = await service.searchPosts('the', { sort: 'name' });
+
+            for (let i = 0; i < data.length - 1; i++) {
+                expect(data[i].name < data[i + 1].name).toBeTruthy();
+            }
+        });
+
+        it('searchPosts should sort with name', async () => {
+            const { data } = await service.searchPosts('the', { sort: 'name' });
+
+            for (let i = 0; i < data.length - 1; i++) {
+                expect(data[i].name < data[i + 1].name).toBeTruthy();
             }
         });
     });
