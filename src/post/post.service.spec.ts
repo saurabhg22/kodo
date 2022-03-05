@@ -75,5 +75,10 @@ describe('PostService', () => {
                 ).toBeTruthy();
             }
         });
+
+        it('searchPosts should have a first page by default', async () => {
+            const { page } = await service.searchPosts('the');
+            expect(page).toBe(1);
+        });
     });
 });
