@@ -60,15 +60,19 @@ describe('PostService', () => {
             const { data } = await service.searchPosts('the', { sort: 'name' });
 
             for (let i = 0; i < data.length - 1; i++) {
-                expect(data[i].name < data[i + 1].name).toBeTruthy();
+                expect(data[i].name <= data[i + 1].name).toBeTruthy();
             }
         });
 
-        it('searchPosts should sort with name', async () => {
-            const { data } = await service.searchPosts('the', { sort: 'name' });
+        it('searchPosts should sort with dateLastEdited', async () => {
+            const { data } = await service.searchPosts('the', {
+                sort: 'dateLastEdited',
+            });
 
             for (let i = 0; i < data.length - 1; i++) {
-                expect(data[i].name < data[i + 1].name).toBeTruthy();
+                expect(
+                    data[i].dateLastEdited <= data[i + 1].dateLastEdited,
+                ).toBeTruthy();
             }
         });
     });
