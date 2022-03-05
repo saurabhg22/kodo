@@ -15,4 +15,12 @@ describe('PostService', () => {
     it('should be defined', () => {
         expect(service).toBeDefined();
     });
+
+    it('getPosts should return posts', async () => {
+        const { data, total } = await service.getPosts();
+        expect(data).toBeDefined();
+        expect(total).toBeDefined();
+        expect(data).toBeInstanceOf(Array);
+        expect(total).toBeInstanceOf(Number);
+    });
 });
