@@ -80,5 +80,12 @@ describe('PostService', () => {
             const { page } = await service.searchPosts('the');
             expect(page).toBe(1);
         });
+
+        it('searchPosts should returns at-most items per page', async () => {
+            const { data } = await service.searchPosts('the', {
+                itemsPerPage: 10,
+            });
+            expect(data.length).toBeLessThanOrEqual(10);
+        });
     });
 });

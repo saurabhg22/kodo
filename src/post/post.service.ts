@@ -17,7 +17,11 @@ export class PostService {
 
     async searchPosts(
         query: string,
-        options: { sort?: 'name' | 'dateLastEdited' } = {},
+        options: {
+            sort?: 'name' | 'dateLastEdited';
+            page?: number;
+            itemsPerPage?: number;
+        } = { page: 1, itemsPerPage: 10 },
     ) {
         const posts = await this.getPosts();
 
@@ -38,10 +42,15 @@ export class PostService {
         if (options.sort) {
             filteredPosts = sortBy(filteredPosts, options.sort);
         }
+        filteredPosts = filteredPosts.slice(
+            options.page * options.itemsPerPage,
+            (options.page + 1) * options.itemsPerPage,
+        );
 
         return {
             data: filteredPosts,
             total: filteredPosts.length,
+            page: options.page,
         };
     }
 }
