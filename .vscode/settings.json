@@ -1,7 +1,10 @@
 {
     "editor.formatOnSave": true,
     "cSpell.words": [
-        "nestjs"
+        "dtos",
+        "kodo",
+        "nestjs",
+        "prebuild"
     ],
     "editor.tabSize": 4,
     "prettier.tabWidth": 4
