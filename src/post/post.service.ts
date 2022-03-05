@@ -1,6 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PostRepository } from './post.repository';
 import { trim, sortBy } from 'lodash';
+import {
+    SearchPostQueryDTO,
+    SearchPostResponseDTO,
+} from './dtos/search-post.dto';
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_ITEMS_PER_PAGE = 10;
 
 @Injectable()
 export class PostService {
@@ -16,13 +23,21 @@ export class PostService {
     }
 
     async searchPosts(
-        query: string,
-        options: {
-            sort?: 'name' | 'dateLastEdited';
-            page?: number;
-            itemsPerPage?: number;
-        } = { page: 1, itemsPerPage: 10 },
-    ) {
+        searchPostQueryDTO: SearchPostQueryDTO = {},
+    ): Promise<SearchPostResponseDTO> {
+        const {
+            options: {
+                sort,
+                page = DEFAULT_PAGE,
+                itemsPerPage = DEFAULT_ITEMS_PER_PAGE,
+            } = {
+                page: DEFAULT_PAGE,
+                itemsPerPage: DEFAULT_ITEMS_PER_PAGE,
+            },
+        } = searchPostQueryDTO;
+
+        let { query = '' } = searchPostQueryDTO;
+
         const posts = await this.getPosts();
 
         const isDoubleQuotes = query.startsWith('"') && query.endsWith('"');
@@ -39,18 +54,18 @@ export class PostService {
             return false;
         });
 
-        if (options.sort) {
-            filteredPosts = sortBy(filteredPosts, options.sort);
+        if (sort) {
+            filteredPosts = sortBy(filteredPosts, sort);
         }
         filteredPosts = filteredPosts.slice(
-            options.page * options.itemsPerPage,
-            (options.page + 1) * options.itemsPerPage,
+            (page - 1) * itemsPerPage,
+            page * itemsPerPage,
         );
 
         return {
-            data: filteredPosts,
+            results: filteredPosts,
             total: filteredPosts.length,
-            page: options.page,
+            page: page,
         };
     }
 }

@@ -1,0 +1,36 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Post {
+  name: String!
+  image: String!
+  description: String!
+  dateLastEdited: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type SearchPostResponseDTO {
+  total: Float!
+  page: Float!
+  results: [Post!]!
+}
+
+type Query {
+  search(filter: SearchPostQueryDTO): SearchPostResponseDTO!
+}
+
+input SearchPostQueryDTO {
+  query: String = ""
+  options: SearchPostOptions
+}
+
+input SearchPostOptions {
+  sort: String
+  page: Float
+  itemsPerPage: Float
+}

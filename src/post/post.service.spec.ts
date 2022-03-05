@@ -37,19 +37,23 @@ describe('PostService', () => {
 
     describe('searchPosts', () => {
         it('searchPosts should take an input text and return posts', async () => {
-            const { data, total } = await service.searchPosts('the king');
+            const { results, total } = await service.searchPosts({
+                query: 'the king',
+            });
 
             expect(total).toBeDefined();
             expect(typeof total).toBe('number');
 
-            expect(data).toBeDefined();
-            expect(data).toBeInstanceOf(Array);
+            expect(results).toBeDefined();
+            expect(results).toBeInstanceOf(Array);
         });
 
         it('searchPosts should only return items with exact match when query has double quotes', async () => {
-            const { data } = await service.searchPosts('"the King"');
+            const { results } = await service.searchPosts({
+                query: '"the King"',
+            });
 
-            for (const post of data) {
+            for (const post of results) {
                 expect(
                     (post.name + post.description).includes('the King'),
                 ).toBeTruthy();
@@ -57,35 +61,46 @@ describe('PostService', () => {
         });
 
         it('searchPosts should sort with name', async () => {
-            const { data } = await service.searchPosts('the', { sort: 'name' });
+            const { results } = await service.searchPosts({
+                query: 'the',
+                options: {
+                    sort: 'name',
+                },
+            });
 
-            for (let i = 0; i < data.length - 1; i++) {
-                expect(data[i].name <= data[i + 1].name).toBeTruthy();
+            for (let i = 0; i < results.length - 1; i++) {
+                expect(results[i].name <= results[i + 1].name).toBeTruthy();
             }
         });
 
         it('searchPosts should sort with dateLastEdited', async () => {
-            const { data } = await service.searchPosts('the', {
-                sort: 'dateLastEdited',
+            const { results } = await service.searchPosts({
+                query: 'the',
+                options: {
+                    sort: 'dateLastEdited',
+                },
             });
 
-            for (let i = 0; i < data.length - 1; i++) {
+            for (let i = 0; i < results.length - 1; i++) {
                 expect(
-                    data[i].dateLastEdited <= data[i + 1].dateLastEdited,
+                    results[i].dateLastEdited <= results[i + 1].dateLastEdited,
                 ).toBeTruthy();
             }
         });
 
         it('searchPosts should have a first page by default', async () => {
-            const { page } = await service.searchPosts('the');
+            const { page } = await service.searchPosts();
             expect(page).toBe(1);
         });
 
         it('searchPosts should returns at-most items per page', async () => {
-            const { data } = await service.searchPosts('the', {
-                itemsPerPage: 10,
+            const { results } = await service.searchPosts({
+                query: 'the',
+                options: {
+                    itemsPerPage: 10,
+                },
             });
-            expect(data.length).toBeLessThanOrEqual(10);
+            expect(results.length).toBeLessThanOrEqual(10);
         });
     });
 });
