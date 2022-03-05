@@ -34,4 +34,27 @@ describe('PostService', () => {
             expect(data[0]).toBeDefined();
         });
     });
+
+    describe('searchPosts', () => {
+        it('searchPosts should take an input text and return posts', async () => {
+            const { data, total } = await service.searchPosts('the king');
+
+            expect(total).toBeDefined();
+            expect(typeof total).toBe('number');
+
+            expect(data).toBeDefined();
+            expect(data).toBeInstanceOf(Array);
+        });
+
+        it('searchPosts should only return items with exact match when query has double quotes', async () => {
+            const { data } = await service.searchPosts('"the King"');
+
+            console.log(data);
+            for (const post of data) {
+                expect(
+                    (post.name + post.description).includes('the King'),
+                ).toBe(true);
+            }
+        });
+    });
 });
