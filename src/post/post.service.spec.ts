@@ -17,19 +17,21 @@ describe('PostService', () => {
         expect(service).toBeDefined();
     });
 
-    it('getPosts should return posts', async () => {
-        const { data, total } = await service.getPosts();
-        expect(total).toBeDefined();
-        expect(typeof total).toBe('number');
+    describe('getPosts', () => {
+        it('getPosts should return posts', async () => {
+            const { data, total } = await service.getPosts();
+            expect(total).toBeDefined();
+            expect(typeof total).toBe('number');
 
-        expect(data).toBeDefined();
-        expect(data).toBeInstanceOf(Array);
-    });
+            expect(data).toBeDefined();
+            expect(data).toBeInstanceOf(Array);
+        });
 
-    it('getPosts should return at-least one post on empty query', async () => {
-        const { data, total } = await service.getPosts();
-        expect(total).toBeGreaterThan(0);
+        it('getPosts should return at-least one post on empty query', async () => {
+            const { data, total } = await service.getPosts();
+            expect(total).toBeGreaterThan(0);
 
-        expect(data[0]).toBeDefined();
+            expect(data[0]).toBeDefined();
+        });
     });
 });
